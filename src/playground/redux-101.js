@@ -4,12 +4,14 @@ const store = createStore((state = { count: 0 }, action) => {
 
   switch(action.type){
     case 'INCREMENT':
+      const incrementBy = typeof action.incrementBy === 'number' ? action.incrementBy : 1;
       return {
-        count: state.count + 1
+        count: state.count + incrementBy
       };
     case 'DECREMENT':
+      const decrementBy = typeof action.decrementBy === 'number' ? action.decrementBy : 1;
       return {
-        count: state.count - 1
+        count: state.count - decrementBy
       };
     case 'RESET':
       return{
@@ -21,14 +23,24 @@ const store = createStore((state = { count: 0 }, action) => {
 
 });
 
-store.dispatch({
-  type: 'INCREMENT'
+const unsubscribe = store.subscribe(() => {
+  console.log(store.getState());
 });
 
-console.log(store.getState());
 store.dispatch({
-  type: 'DECREMENT'
+  type: 'INCREMENT',
+  incrementBy: 5
 });
+
+unsubscribe();
+
+console.log(store.getState());
+
+store.dispatch({
+  type: 'DECREMENT',
+  decrementBy: 10
+});
+
 
 console.log(store.getState());
 store.dispatch({
@@ -39,9 +51,4 @@ console.log(store.getState());
 store.dispatch({
   type: 'RESET'
 });
-
 console.log(store.getState());
-
-// Actions
-// I'd like to increment the count
-// I'd like to reset the count to zero
